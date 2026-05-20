@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eSadu | Modern Heritage</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sadu: {
+                            red: '#8B2323',     // Traditional Sadu Red
+                            dark: '#1A1A1A',    // Deep Black/Brown
+                            sand: '#E8E1D5',    // Sand/Canvas
+                            accent: '#D4AF37'   // Gold Accent
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar and minor utilities */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #E8E1D5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #8B2323;
+        }
+        .pattern-bg {
+            background-image: url('data:image/svg+xml,%3Csvg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2V0h2v20h2V0h2v20h2V0h2v20h2V0h2v20h2v2H20v-1.5zM0 20h2v20H0V20zm4 0h2v20H4V20zm4 0h2v20H8V20zm4 0h2v20h-2V20zm4 0h2v20h-2V20zm4 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2z" fill="%238B2323" fill-opacity="0.05" fill-rule="evenodd"/%3E%3C/svg%3E');
+        }
+        
+        /* Toast Animation */
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .toast-enter {
+            animation: slideIn 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-sadu-sand text-sadu-dark font-sans antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer">
+                    <span class="font-serif text-3xl font-bold tracking-wider text-sadu-red">eSadu<span class="text-sadu-dark">.</span></span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#collections" class="text-sadu-dark hover:text-sadu-red font-medium transition-colors">Collections</a>
+                    <a href="#heritage" class="text-sadu-dark hover:text-sadu-red font-medium transition-colors">Our Heritage</a>
+                    <a href="#about" class="text-sadu-dark hover:text-sadu-red font-medium transition-colors">About Us</a>
+                    
+                    <!-- Cart Icon -->
+                    <button class="relative p-2 text-sadu-dark hover:text-sadu-red transition-colors group">
+                        <i class="ph ph-shopping-bag text-2xl"></i>
+                        <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-sadu-red rounded-full transform scale-0 transition-transform duration-300">
+                            0
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-sadu-dark hover:text-sadu-red focus:outline-none">
+                        <i class="ph ph-list text-3xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-sadu-sand/95 backdrop-blur-md border-t border-sadu-red/10 absolute w-full shadow-lg">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#collections" class="block px-3 py-2 text-base font-medium text-sadu-dark hover:text-sadu-red hover:bg-white/50 rounded-md">Collections</a>
+                <a href="#heritage" class="block px-3 py-2 text-base font-medium text-sadu-dark hover:text-sadu-red hover:bg-white/50 rounded-md">Our Heritage</a>
+                <a href="#about" class="block px-3 py-2 text-base font-medium text-sadu-dark hover:text-sadu-red hover:bg-white/50 rounded-md">About Us</a>
+                <div class="px-3 py-2 flex items-center space-x-2 text-sadu-dark">
+                    <i class="ph ph-shopping-bag text-xl"></i>
+                    <span>Cart (<span id="mobile-cart-count">0</span>)</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+        <!-- Background Image with Overlay -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1600164318935-717e1f440b8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Sadu Weaving Texture" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-r from-sadu-dark/90 to-sadu-dark/40"></div>
+        </div>
+        
+        <!-- Hero Content -->
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
+            <h1 class="font-serif text-5xl md:text-7xl text-white font-bold mb-6 leading-tight">
+                Woven with <span class="text-sadu-red">History</span>,<br> Styled for Today.
+            </h1>
+            <p class="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto font-light">
+                Discover authentic Sadu patterns reimagined for modern life. Premium fashion, home decor, and accessories crafted with Saudi heritage.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#collections" class="px-8 py-4 bg-sadu-red text-white font-medium hover:bg-red-800 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 duration-300">
+                    Explore Collection
+                </a>
+                <a href="#heritage" class="px-8 py-4 bg-transparent border border-white text-white font-medium hover:bg-white hover:text-sadu-dark transition-colors duration-300">
+                    Our Story
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Collections -->
+    <section id="collections" class="py-24 pattern-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl font-bold text-sadu-dark mb-4">Featured Arrivals</h2>
+                <div class="w-16 h-1 bg-sadu-red mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                
+                <!-- Product 1 -->
+                <div class="bg-white group cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
+                    <div class="h-80 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1590736704728-f4730bb30770?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sadu Tote Bag" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"></div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Accessories</p>
+                        <h3 class="font-serif text-xl font-bold mb-2 group-hover:text-sadu-red transition-colors">Najd Tote Bag</h3>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-lg font-medium">SAR 350</span>
+                            <button onclick="addToCart('Najd Tote Bag')" class="w-10 h-10 rounded-full bg-sadu-sand flex items-center justify-center text-sadu-dark hover:bg-sadu-red hover:text-white transition-colors z-10 relative">
+                                <i class="ph ph-plus text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="bg-white group cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
+                    <div class="h-80 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Decorative Pillow" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-6">
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Home Decor</p>
+                        <h3 class="font-serif text-xl font-bold mb-2 group-hover:text-sadu-red transition-colors">Bedouin Accent Pillow</h3>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-lg font-medium">SAR 180</span>
+                            <button onclick="addToCart('Bedouin Accent Pillow')" class="w-10 h-10 rounded-full bg-sadu-sand flex items-center justify-center text-sadu-dark hover:bg-sadu-red hover:text-white transition-colors z-10 relative">
+                                <i class="ph ph-plus text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="bg-white group cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
+                    <div class="absolute top-4 left-4 z-20 bg-sadu-dark text-white text-xs px-2 py-1 uppercase tracking-wider">New</div>
+                    <div class="h-80 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1544441893-675973e31985?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Winter Coat" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-6">
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Apparel</p>
+                        <h3 class="font-serif text-xl font-bold mb-2 group-hover:text-sadu-red transition-colors">Modern Farwa</h3>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-lg font-medium">SAR 890</span>
+                            <button onclick="addToCart('Modern Farwa')" class="w-10 h-10 rounded-full bg-sadu-sand flex items-center justify-center text-sadu-dark hover:bg-sadu-red hover:text-white transition-colors z-10 relative">
+                                <i class="ph ph-plus text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="bg-white group cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
+                    <div class="h-80 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Ceramic Mug" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-6">
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Living</p>
+                        <h3 class="font-serif text-xl font-bold mb-2 group-hover:text-sadu-red transition-colors">Sadu Motif Mug Set</h3>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-lg font-medium">SAR 120</span>
+                            <button onclick="addToCart('Sadu Motif Mug Set')" class="w-10 h-10 rounded-full bg-sadu-sand flex items-center justify-center text-sadu-dark hover:bg-sadu-red hover:text-white transition-colors z-10 relative">
+                                <i class="ph ph-plus text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="inline-flex items-center space-x-2 text-sadu-red font-medium hover:text-red-900 transition-colors">
+                    <span>View All Products</span>
+                    <i class="ph ph-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Heritage Section -->
+    <section id="heritage" class="py-20 bg-sadu-dark text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2">
+                    <img src="https://images.unsplash.com/photo-1542044801-44bf83318217?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Traditional Weaving" class="w-full h-auto border-4 border-sadu-red/20 shadow-2xl">
+                </div>
+                <div class="lg:w-1/2">
+                    <h2 class="font-serif text-4xl md:text-5xl font-bold mb-6">The Art of the Desert</h2>
+                    <div class="w-16 h-1 bg-sadu-red mb-8"></div>
+                    <p class="text-gray-300 mb-6 text-lg leading-relaxed">
+                        Sadu is more than a fabric; it is the visual language of the Bedouin. For centuries, these intricate geometric patterns have told stories of desert life, community, and survival.
+                    </p>
+                    <p class="text-gray-300 mb-8 text-lg leading-relaxed">
+                        At eSadu, we collaborate closely with local artisans to preserve this UNESCO-recognized intangible cultural heritage. We blend traditional weaving techniques with contemporary design to bring a piece of Saudi soul into your modern lifestyle.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-sadu-red font-bold text-2xl mb-1">100%</h4>
+                            <p class="text-sm text-gray-400 uppercase tracking-wide">Authentic Materials</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sadu-red font-bold text-2xl mb-1">Local</h4>
+                            <p class="text-sm text-gray-400 uppercase tracking-wide">Artisan Supported</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="py-24 bg-white text-center">
+        <div class="max-w-2xl mx-auto px-4">
+            <i class="ph ph-envelope-simple-open text-5xl text-sadu-red mb-4"></i>
+            <h2 class="font-serif text-3xl font-bold mb-4 text-sadu-dark">Join the eSadu Community</h2>
+            <p class="text-gray-600 mb-8">Subscribe to receive updates on new collections, exclusive offers, and stories from our artisans.</p>
+            <form onsubmit="event.preventDefault(); showToast('Thanks for subscribing!');" class="flex flex-col sm:flex-row max-w-md mx-auto gap-2">
+                <input type="email" placeholder="Enter your email" required class="flex-1 px-4 py-3 bg-sadu-sand/30 border border-gray-300 focus:outline-none focus:border-sadu-red focus:ring-1 focus:ring-sadu-red">
+                <button type="submit" class="px-6 py-3 bg-sadu-dark text-white hover:bg-sadu-red transition-colors font-medium">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-sadu-dark text-white pt-16 pb-8 border-t-4 border-sadu-red">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-1">
+                    <span class="font-serif text-3xl font-bold tracking-wider text-white mb-4 block">eSadu<span class="text-sadu-red">.</span></span>
+                    <p class="text-gray-400 text-sm">Riyadh, Saudi Arabia<br>Preserving heritage, one thread at a time.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Shop</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Apparel</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Bags & Accessories</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Home & Living</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Gift Cards</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Support</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Shipping & Returns</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Care Guide</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-sadu-red transition-colors">
+                            <i class="ph ph-instagram-logo text-xl"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-sadu-red transition-colors">
+                            <i class="ph ph-twitter-logo text-xl"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-sadu-red transition-colors">
+                            <i class="ph ph-tiktok-logo text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+                <p>&copy; 2026 eSadu. All rights reserved.</p>
+                <div class="space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white">Privacy Policy</a>
+                    <a href="#" class="hover:text-white">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification Container (Replaces alert()) -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-3"></div>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-sadu-sand/95', 'backdrop-blur-md', 'shadow-md');
+                navbar.classList.remove('bg-transparent');
+            } else {
+                navbar.classList.remove('bg-sadu-sand/95', 'backdrop-blur-md', 'shadow-md');
+                navbar.classList.add('bg-transparent');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Cart Functionality
+        let cartItems = 0;
+        
+        function updateCartBadge() {
+            const badge = document.getElementById('cart-count');
+            const mobileBadge = document.getElementById('mobile-cart-count');
+            
+            badge.innerText = cartItems;
+            mobileBadge.innerText = cartItems;
+
+            if (cartItems > 0) {
+                badge.classList.remove('scale-0');
+                badge.classList.add('scale-100');
+            }
+        }
+
+        function addToCart(productName) {
+            cartItems++;
+            updateCartBadge();
+            showToast(`Added ${productName} to your bag.`);
+        }
+
+        // Custom Toast Notification System
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            toast.className = 'toast-enter bg-sadu-dark text-white px-6 py-4 rounded-lg shadow-2xl flex items-center gap-3 min-w-[250px]';
+            toast.innerHTML = `
+                <i class="ph ph-check-circle text-sadu-red text-xl"></i>
+                <span class="font-medium text-sm">${message}</span>
+            `;
+            
+            container.appendChild(toast);
+
+            // Remove toast after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                toast.style.transition = 'all 0.3s ease-out';
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
